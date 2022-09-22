@@ -1,4 +1,4 @@
-# Regression linéaire de IMC ~ age
+# Regression linéaire de bmi ~ age
 
 # Packages ------
 SciViews::R("model", lang = "fr"
@@ -83,5 +83,5 @@ bmi_result <- list(
   pbmi, bio_sum, bmi_lm
 )
 
-fs::dir_create("data/")
-saveRDS(bmi_result, "data/bmi_lm.rds")
+dir_create("data")
+write$rds(bmi_result, "data/bmi_lm.rds")
