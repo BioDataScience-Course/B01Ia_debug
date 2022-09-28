@@ -1,5 +1,5 @@
-# Régression linéaire de IMC ~ circomférence du poignet
-## version 2
+# Régression linéaire de IMC ~ circonférence du poignet
+## Version 2
 ################################################################################
 
 # Packages -------
@@ -96,5 +96,4 @@ bmi_result <- list(
 )
 
 fs::dir_create("data/")
-saveRDS(bmi_result, "data/bmi_lm_corr.rds")
-
+saveRDS(bmi_result, "data/bmi_lm.rds")
