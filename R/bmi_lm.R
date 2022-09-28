@@ -1,71 +1,83 @@
-# Regression linéaire de IMC ~ age
+# Régression linéaire de IMC ~ circomférence du poignet
+## version 2
+################################################################################
 
-# Packages ------
-SciViews::R("model", lang = "fr"
+# Packages -------
+SciViews::R("model" lang = "fr")
 
 # Importation des données ----------
-bio <- read("biometry", pacakge = "BioDataScience")
+bio <- read("biometry", package = BioDataScience)
+??biometry
 
 # Exploration des données -------
-skimr::skimr(bio)
+skimr::skim(bio)
 
-## Graphiques
-chart(data = bio, height ~ age) |>
-  geom_point()
-
-chart(data = bio, weight ~ age)
-  geom_point()
-
-# Calcul de la variable `bmi` ------
+# Calcul de l'IMC (bmi, body mass index) et de l'indice de masse grasse (bfp, body fat percentage) -------
+## IMC (kg/m^2)
+## IMC = Masse/Taille^2
+## Masse en kilogramme
+## Taille en mètre
+## IMG (%)
+## IMG (%) = (1.20∗IMC) + (0.23∗Age) − (10.8∗Sexe) − 5.4
+## Age en année
+## Sexe : Sexe = 1 pour les hommes et Sexe = 0 pour les femmes
 bio <- mutate(bio,
-  bmi = labelise(weight/(height*100)^2, label = "IMC", units = "kg/m^2"),
-  bmi_class = factor(
-    case_when(
-      bmi < 16 ~ "Underweight (Severe thinness)"
-      bmi >= 16 & bmi < 17 ~ "Underweight (Moderate thinness)",
-      bmi >= 17 & bmi < 18.5 ~ "Underweight (Mild thinness)",
-      bmi >= 18.5 & bmi < 25 ~ "Normal range",
-      bmi >= 25.0 & bmi < 30 ~ "Overweight (Pre-obese)",
-      bmi >= 30 & bmi < 35 ~ "Obese (Class I)",
-      bmi >= 35 & bmi < 40 ~ "Obese (Class II)",
-      bmi >= 40 ~ "Obese (Class III)"
-      ),
-    levels = c(
-      "Underweight (Severe thinness)", "Underweight (Moderate thinness)", "Underweight (Mild thinness)",
-      "Normal range", "Overweight (Pre-obese)", "Obese (Class I)",
-      "Obese (Class II)", "Obese (Class III)"
-      ), ordered = TRUE)
+  bmi = labelise(weight^2/height, label = "IMC", units = "kg/m^2"),
+  bfp = labelise(case_when(
+    gender == "W" ~ (1.20*bmi) + (0.23*age) - 10.8 - 5.4
+    gender == "W" ~ (1.20*bmi) + (0.23*age) - 5.4)
+    , labels = "IMG", units = "%")
   )
 
-## Graphique
-pbmi <- chart(data = bio, bmi ~ age) +
-  geom_point()
-pbmi
-
-## Tableau
-table(biometry$bmi_class)
-
+## Corrélation entre les variables  weight, height,wrist, age, bmi, bfp -------
 bio %>.%
-  sgroup_by(bmi_class, gender) |> summarise(.,
-    bmi_mean = fmean(bmi), bmi_sd = fsd(bmi), n = fn(bmi)) ->
+  sselect(., c(weight, height, wirst, age, bmi, bfp)) %>.%
+  sdrop_na(., wrist) %>.%
+  correlation(.) ->
+  bio_corr
+
+plot(bio_cor, type = "upper")
+
+## Tableau résumé -------
+bio |>
+  group_by(., gender) |> ssummarise(
+    bfp_mean = fmean(bfp), bfp_sd = fsd(img),
+    bmi_mean = fmean(bim), bmi_sd = fsd(bmi),
+    n = fn(bfp)) ->
   bio_sum
 
 bio_sum
 
-# Modéliser la régression linéaire de  bmi ~ age ------
-bmi_lm <- lm(data = bio, bmi ~ age)
+## Graphiques -------
+### Masse en fonction de la taille
+pweight <- chart(data = bio,  ~ weight+height)
+  geom_point()
+
+### IMG en fonction du genre
+pbfp <- chart(data = bio, bfp ~ gender) |>
+  geom_boxplot()
+
+### IMC en fonction de la circomférence du poignet
+pbmi <- chart(data = bio, bmi ~ wrist) +
+  geom_point()
+
+### Graphiques combinés
+combine_charts(list(pweight, pbfp, pbmi))
+
+# Modéliser la régression linéaire de bmi ~ wrist ------
+bmi_lm <- lm(bio, bmi ~ wrist)
 
 ## Résumé du modèle
-summary(bio)
-glance()
-tidy(bio)
+glance(bmi_ml)
+tidy(bio_lm)
 
-## Graphique du modèle
-chart()
-
-## Analyse des résidus
+# Page d'aide des graphiques
 ?chart.lm
 
+## Graphique du modèle
+chart(bmi_lm)
+
+## Analyse des résidus
 ### Distribution homogène des résidus
 chart$(bmi_lm)
 
@@ -73,7 +85,7 @@ chart$(bmi_lm)
 chart$(bmi_lm)
 
 ### Distribution des résidus standardisés
-chart$(bim_lm)
+chart$(bmi_lm)
 
 ### Influence des individus sur la régression linéaire
 chart$(bmi_lm)
@@ -84,4 +96,5 @@ bmi_result <- list(
 )
 
 fs::dir_create("data/")
-saveRDS(bmi_result, "data/bmi_lm.rds")
+saveRDS(bmi_result, "data/bmi_lm_corr.rds")
+

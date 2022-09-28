@@ -2,7 +2,7 @@
 
 ## Avant-propos
 
-Les consignes reprises dans ce document, ainsi que dans les différents fichiers sont susceptibles d'évoluer. N'hésitez pas à vérifier le lien suivant afin de voir si des modifications n'y ont pas été apportées : \<\>
+Il s'agit de la seconde version de l'exercice de débogage.
 
 Ce projet nécessite d'avoir assimilé l'ensemble des notions du premier module du cours de Science des données biologiques 2.
 
