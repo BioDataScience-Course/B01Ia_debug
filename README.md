@@ -15,7 +15,6 @@ Cet exercice est individuel. Vous devrez :
 -   réaliser l'analyse des résidus du modèle
 
 ## Consignes
-### Étape 1
 
 Le script `R/bmi_lm.R` a été réalisé par des scientifiques qui souhaitent modéliser l'indice de masse corporelle en fonction du tour du poignet. Le script comprend malheureusement une multitude d'erreurs. On peut regrouper ces erreurs en deux grandes catégories. La première catégorie comprend les erreurs techniques liées à l'utilisation de R comme l'oubli de parenthèses, de virgules, de points...  La seconde catégorie comprend des erreurs scientifiques comme la réalisation d'un mauvais modèle, d'un graphique inadapté ou encore de se tromper dans le calcul d'une nouvelle variable.
 
