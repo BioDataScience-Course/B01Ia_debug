@@ -19,7 +19,7 @@ test_that("Le jeu de données bio est-il correct après l'étape 2 ?", {
   # Des colonnes sont manquantes ou ne portent pas le bon nom
 
   expect_lt(collapse::fmean(res$bmi), 50)
-  # Les valeurs d'IMC sont trop élevées. 
+  # Les valeurs d'IMC sont trop élevées.
   # Par exemple, selon l’OMS, une personne est en obésité
   # quand son IMC est égal ou supérieur à 30.
 
