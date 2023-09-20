@@ -40,8 +40,8 @@ _bookdown_files/
 _site/
 
 # Compilation results
-#tests/results/
-tests/results/*.rds
+tests/results/
+!/tests/results/README.md
 
 # Knitr cache
 *_cache/
