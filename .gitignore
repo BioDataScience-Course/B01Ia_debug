@@ -40,7 +40,7 @@ _bookdown_files/
 _site/
 
 # Compilation results
-tests/results/
+#tests/results/
 
 # Knitr cache
 *_cache/
