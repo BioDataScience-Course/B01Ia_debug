@@ -19,8 +19,9 @@ test_that("Le jeu de données bio est-il correct après l'étape 2 ?", {
   # Des colonnes sont manquantes ou ne portent pas le bon nom
 
   expect_lt(collapse::fmean(res$bmi), 50)
-  # Les valeurs d'IMC sont trop élevés. Par exemple, L'OMS définit l'obésité
-  # quand l'IMC est égale ou supérieur à 30.
+  # Les valeurs d'IMC sont trop élevées. 
+  # Par exemple, selon l’OMS, une personne est en obésité
+  # quand son IMC est égal ou supérieur à 30.
 
   expect_equivalent(sum(is.na(res$bfp)), 0)
   # La colonne bfp comprend des valeurs manquantes
@@ -77,7 +78,7 @@ test_that("Le graphique pweight, réalisé à l'étape 6, est-il correct ?",  {
   # Avez-vous bien exécuté l'instruction check_object() à la fin ?
 
   expect_equivalent(res, tpl)
-  # Le nuage de points de la masse en fonction de la taille est incorrects
+  # Le nuage de points de la masse en fonction de la taille est incorrect
 })
 
 test_that("Le graphique pbmi, réalisé à l'étape 6, est-il correct ?",  {
@@ -98,15 +99,15 @@ test_that("L'objet `bmi_lm.rds`, réalisé à l'étape 7, est-il correct ?", {
   tpl <- read_tpl("bmi_lm")
 
   expect_true(!is.null(res))
-  # Le model `bmi_lm` est introuvable.
+  # Le modèle `bmi_lm` est introuvable.
   # Avez-vous bien exécuté l'instruction check_object() à la fin ?
 
   expect_equivalent(res, tpl)
-  # La formule utilisé dans le modèle est incorrecte.
+  # La formule utilisée dans le modèle est incorrecte.
 })
 
 
-test_that("Les graphiques de l'analyse des résidus, réalisé à l'étape 7, sont-ils corrects ?", {
+test_that("Les graphiques de l'analyse des résidus, réalisée à l'étape 7, sont-ils corrects ?", {
   res <- read_res("plm1")
   tpl <- read_tpl("plm1")
   expect_equivalent(res, tpl)
@@ -120,7 +121,7 @@ test_that("Les graphiques de l'analyse des résidus, réalisé à l'étape 7, so
   res <- read_res("plm3")
   tpl <- read_tpl("plm3")
   expect_equivalent(res, tpl)
-  # Le graphique ne correspond pas à la distribution des résidus standardiséss.
+  # Le graphique ne correspond pas à la distribution des résidus standardisés.
 
   res <- read_res("plm4")
   tpl <- read_tpl("plm4")
