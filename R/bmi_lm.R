@@ -1,25 +1,27 @@
 # Régression linéaire de l’IMC en fonction du tour de poignet
-################################################################################
-################################################################################
+
+# Consigne générale : corrigez les lignes de code et exécutez-les dans l'ordre.
+# Ne modifiez pas lignes de codes qui permettent la vérification check_object()
+# Allez dans l'onglet Construire -> Construire tout pour vériifaction.
 
 # Fonctions dédiées aux tests. NE PAS MODIFIER.
 source("tests/test_functions.R")
 
-# Packages -------
+# Configuration de l'environnement R
 SciViews::R("model" lang = "fr")
 
-# Étape 1 : Importation des données ---------------------------------------
 
+# Étape 1 : Importation des données ---------------------------------------
 
 biometry <- read("biometry", package = BioDataScience)
 ?BioDataScience::biometry
 skimr::skim(biometry)
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("biometry", fun = df_structure)
 
-# Étape 2 : calcul de nouvelles variables -------------------------------------------
 
+# Étape 2 : Calcul de nouvelles variables ----------------------------------
 
 # Calcul de l'IMC (bmi, body mass index)
 # et de l'indice de masse grasse (bfp, body fat percentage)
@@ -38,8 +40,9 @@ bio <- smutate(biometry,
     gender == "W" ~ (1.20*bmi) + (0.23*age) - 5.4)
     , labels = "IMG", units = "%"))
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("bio", "bio_smutate")
+
 
 # Étape 3 : Réduction du tableau ------------------------------------------
 
@@ -54,15 +57,13 @@ bio %>.%
 # L'instruction suivante ne doit pas être modifiée
 check_object("bio", "bio_red", fun = df_structure)
 
-# L'instruction ci-dessous vous permet de continuer l'exercice
-# même si vous n'avez pas terminé les étapes 1 à 3
-bio <- read("data/bio1.rds")
 
 # Étape 4 : Matrice de corrélation ----------------------------------------
 
+# Vous permet de continuer l'exercice même sans avoir terminé les étapes 1 à 3
+bio <- read("data/bio1.rds")
 
-# Corrélation de Pearson
-# Variables sélectionnées : weight, height, wrist, age, bmi
+# Corrélation de Pearson, variables : weight, height, wrist, age, bmi
 bio %>.%
   sselect(., c(weight, height, wirst, age, bmi)) %>.%
   sdrop_na(., wrist) %>.%
@@ -71,11 +72,11 @@ bio %>.%
 
 plot(bio_corr, type = "upper")
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("bio_corr")
 
-# Étape 5 : Tableau résumé ------------------------------------------------
 
+# Étape 5 : Tableau résumé ------------------------------------------------
 
 # Regroupement par genre
 # puis calcul de la moyenne, de l'écart-type et du nombre d'individus
@@ -90,24 +91,27 @@ bio %>.%
 tabularise(bio_sum, auto.labs = FALSE) |>
   colformat_sci()
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("bio_sum", fun = df_structure)
 
-# Étape 6 : Graphiques ----------------------------------------------------
 
+# Étape 6 : Graphique de la masse en fonction de la taille -----------------
 
 # Masse en fonction de la taille
 pweight <- chart(data = bio, weight ~ height)
   geom_point()
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("pweight", fun = digest)
 
-### IMC en fonction du tour du poignet
+
+# Étape 7 : Graphique IMC - tour de poignet -------------------------------
+
+# Nuage de points de l'IMC en fonction du tour du poignet
 pbmi <- chart(data = bio, bmi ~ wrist) +
   Sgg$geom_point()
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("pbmi", fun = digest)
 
 ### Graphiques combinés
@@ -117,14 +121,13 @@ combine_charts(list(pweight, pbmi), nrow = 2)
 # même si vous n'avez pas terminé les étapes 1 à 6
 bio <- read("data/bio1.rds")
 
-# Étape 7 : Modélisation  -------------------------------------------------
 
+# Étape 8 : Modélisation  -------------------------------------------------
 
-# Régression linéaire de l’indice de masse corporelle
-# en fonction du tour du poignet
+# Régression linéaire : IMC en fonction du tour du poignet
 bmi_lm <- lm(data = bio bmi ~ wrist)
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object("bmi_lm", fun = formula)
 
 # Nouveauté : résumé du modèle associé à tabularise()
@@ -136,27 +139,29 @@ tabularise(summary(bmi_lm))
 # Graphique du modèle
 chart(bmi_lm)
 
-# Analyse des résidus
-# Distribution homogène des résidus
+
+# Étape 9 : Analyse des résidus -------------------------------------------
+
+# A. Distribution homogène des résidus
 chart$(bmi_lm)
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object(name = "plm1", fun = digest)
 
-# Normalité des résidus
+# B. Normalité des résidus
 chart$(bim_lm)
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object(name = "plm2", fun = digest)
 
-# Distribution des résidus standardisés
+# C. Distribution des résidus standardisés
 chart$(bmi_lm)
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object(name = "plm3", fun = digest)
 
-# Influence des individus sur la régression linéaire
+# D. Influence des individus sur la régression linéaire
 chart$(bmi_lm)
 
-# L'instruction suivante ne doit pas être modifiée
+# L'instruction suivante ne doit pas être modifiée !
 check_object(name = "plm4", fun = digest)
