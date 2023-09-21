@@ -1,7 +1,6 @@
 # Vérification de R/bmi_lm.R
 
-test_that("
-  Étape 1 : Importation des données", {
+test_that("Étape 1 : Importation des données", {
 
   expect_true(!is.null(read_res("biometry")))
   # Le jeu de données `biometry` est introuvable après l'étape 1.
@@ -9,8 +8,7 @@ test_that("
   # Avez-vous bien exécuté l'instruction check_object() à la fin ?
 })
 
-test_that("
-  Étape 2 : Calcul de nouvelles variables", {
+test_that("Étape 2 : Calcul de nouvelles variables", {
   res <- read_res("bio_smutate")
   tpl <- read_tpl("bio_smutate")
 
@@ -34,8 +32,7 @@ test_that("
 })
 
 
-test_that("
-  Étape 3 : Réduction du tableau", {
+test_that("Étape 3 : Réduction du tableau", {
   res <- read_res("bio_red")
   tpl <- read_tpl("bio_red")
 
@@ -52,8 +49,7 @@ test_that("
   # Vérifiez votre code.
 })
 
-test_that("
-  Étape 4 : Matrice de corrélation", {
+test_that("Étape 4 : Matrice de corrélation", {
   res <- read_res("bio_corr")
   tpl <- read_tpl("bio_corr")
 
@@ -71,8 +67,7 @@ test_that("
   # Vérifiez les arguments de la fonction correlation()
 })
 
-test_that("
-  Étape 5 : Tableau résumé", {
+test_that("Étape 5 : Tableau résumé", {
   res <- read_res("bio_sum")
   tpl <- read_tpl("bio_sum")
 
@@ -87,8 +82,7 @@ test_that("
 })
 
 
-test_that("
-  Étape 6 : Graphique de la masse en fonction de la taille",  {
+test_that("Étape 6 : Graphique de la masse en fonction de la taille",  {
   res <- read_res("pweight")
   tpl <- read_tpl("pweight")
 
@@ -100,8 +94,7 @@ test_that("
   # Le nuage de points de la masse en fonction de la taille est incorrect.
 })
 
-test_that("
-  Étape 7 : Graphique IMC - tour de poignet",  {
+test_that("Étape 7 : Graphique IMC - tour de poignet",  {
   res <- read_res("pbmi")
   tpl <- read_tpl("pbmi")
 
@@ -114,8 +107,7 @@ test_that("
 })
 
 
-test_that("
-  Étape 8 : Modélisation", {
+test_that("Étape 8 : Modélisation", {
   res <- read_res("bmi_lm")
   tpl <- read_tpl("bmi_lm")
 
@@ -129,8 +121,7 @@ test_that("
 })
 
 
-test_that("
-  Étape 9 : Analyse des résidus", {
+test_that("Étape 9 : Analyse des résidus", {
   res <- read_res("plm1")
   tpl <- read_tpl("plm1")
   expect_equivalent(res, tpl)
