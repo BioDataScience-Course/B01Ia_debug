@@ -1,3 +1,0 @@
-# Résultats sauvegardés
-
-Ce projet est doté d'un outil de tests qui vous permet de vous évaluer. Ce dossier `/results` comprend une série d'éléments sauvegardés que vous générez lors de la réalisation de ce projet. Vous ne devez en aucun cas modifier ou renommer ce dossier. Ces fichiers sont employés pour réaliser les tests associés à ce projet ...
