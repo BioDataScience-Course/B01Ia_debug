@@ -1,0 +1,216 @@
+---
+title: "Régression linéaire de l’IMC en fonction du tour de poignet"
+author: "___"
+date: "`r Sys.Date()`"
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+editor: visual
+lang: fr
+bibliography: references.bib
+---
+
+<!--% Votre objectif est de déboguer ce document Quarto afin qu’il compile. Vous avez à votre disposition des tests pour vérifier votre progression. -->
+
+<!--% Remplacez author: "___" par votre nom. Votre nom n'est pas votre login Github. ex: author: "John Doe". Attention, l'entête YAML est très sensible aux espaces, aux guillemets et à l'"indentation" (= le nombre d'espaces blancs au début de chaque ligne). Par précaution, mettez toujours le texte derrière title:, author:, date:, … entre guillemets doubles et respectez l'indentation initiale. -->
+
+```{r setup, include=FALSE}
+# This is needed to the SDD test suite, do not use in a "real" project
+if (!"tools:tests" %in% search())
+  source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
+
+# Configure SciViews::R environment
+SciViews::R("model" lang = "fr")
+```
+
+<!--# Ce document est un carnet de notes. C'est l'équivalent d'un cahier de laboratoire pour vos analyses de données. Vous allez y consigner toutes les analyses que vous avez réalisées et leurs interprétations dans l'ordre de votre progression. Il se différencie des documents de présentation des résultats (rapport, présentation avec dias, article scientifique, ouvrage plus conséquent) par son style bref et informel.-->
+
+## Introduction et but
+
+L'excès de graisse, principalement abdominale, est associé à une augmentation des risques de maladies cardiovasculaires et de diabète. Plusieurs indices ont été définis ces dernières années afin de catégoriser les individus à risque. Le plus connu est l'indice de masse corporelle, mais on peut également citer l'indice de masse grasse et le ratio tour de taille/tour de hanche [@lebacq2015].
+
+## Matériel et méthodes
+
+<!--# Dans un bloc-notes, la section matériel et méthodes peut être succincte et renvoyer, par exemple, à un cahier de laboratoire pour les détails, ou à un lien pour des données ouvertes (le DOI est un lien fiable, lorsqu'il existe). Précisez toujours les analyses statistiques et les logiciels utilisés, y compris leurs versions. Attention : RStudio n'est "que" l'éditeur, le logiciel qui fait les calculs est R ! -->
+
+L'étude est restreinte aux jeunes adultes âgés de 18 ans ou plus et de moins de 26 ans. Elle se concentre sur l'indice de masse corporelle et l'indice de masse grasse.
+
+$$
+IMC \ [kg/m^2] = \frac{Masse \ [kg]}{Taille \ [m]}
+$$ {#eq-bmi}
+
+Selon l'IMC, les individus ayant un IMC supérieur à 25 sont considérés comme étant en surpoids et donc ayant un risque accru de maladies cardiovasculaires ou de diabète.
+
+$$
+IMG \ [\%] = (1.2 \times IMC [kg/m^2]) + (0.23 \times Age [Années]) - (10.8 \times Sexe) - 5.4 
+$$ {#eq-bfi}
+
+La variable concernant le sexe vaut 1 pour les hommes et 0 pour les femmes. Selon l'IMG, les hommes ayant plus de 20 % de graisse corporelle et les femmes ayant plus de 25 % ont un risque accru de maladies cardiovasculaires ou de diabète.
+
+Les données sont rendues publiques sous licence MIT dans le package {BioDataScience}. Les métadonnées (dont une description de chaque variable du jeu de données) sont disponibles dans la page d'aide du jeu de données `?biometry`.
+
+L'analyse est réalisée avec la SciViews Box 2024 dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`).
+
+## Résultats
+
+```{r import, record='RODFS', object='biometry'}
+biometry <- read("biometry", package = BioDataScience)
+```
+
+L'indice de masse corporelle (@eq-bmi) ou encore l'indice de masse grasse (@eq-bfi) sont deux indices employés afin de mettre en évidence les personnes à risque. Ces deux indices ont l'avantage d'être très simples à obtenir. La masse, la taille, l'âge ou encore le sexe sont des variables que l'on peut facilement recueillir lors de questionnaires avec des patients.
+
+```{r mutate, record='RODFS', object='bio1'}
+# Calcul de l'IMC (bmi, body mass index)
+# et de l'indice de masse grasse (bfp, body fat percentage)
+# IMC (kg/m^2) = Masse/Taille^2 (Masse en kg et Taille en m)
+# IMG (%) = (1.20 ∗ IMC) + (0.23 ∗ Age) − (10.8 ∗ Sexe) − 5.4
+# Age en années
+# Sexe : Sexe = 1 pour les hommes et Sexe = 0 pour les femmes
+bio1 <- smutate(biometry,
+  bmi = labelise(weight / (height/100)^2,
+    label = "IMC", units = "kg/m^2"),
+  bfp = labelise(case_when(
+    gender == "W" ~ (1.20 * bmi) + (0.23 * age) - 10.8 - 5.4,
+    gender == "W" ~ (1.20 * bmi) + (0.23 * age) - 5.4),
+    label = "IMG (%)", units = NA)
+  )
+```
+
+```{r reduce, record='RODFS', object='bio2'}
+# Élimination des colonnes day_birth et year_measure
+# On garde age égal ou supérieur à 18 et age strictement inférieur à 26
+bio1 %>.%
+  sfilter(., -day_birth, -year_measure) %>.%
+  sselect(., age > 18 & age <= 26) ->
+  bio2
+```
+
+### Description des données
+
+```{r reset1}
+# L'instruction suivante est commentée. Si vous n'avez pas réussi à déboguer 
+# les chunks précédent, vous pouvez décommenter cette instruction pour obtenir
+# le bon tableau de données nommé bio2
+#bio2 <- read("data/bio2.rds")
+```
+
+```{r correlation, record='ROA', object='bio_corr', arg='dimnames'}
+# Corrélation de Pearson, variables : weight, height, wrist, age, bmi
+bio2 %>.%
+  sselect(., weight, height, wirst, age, bmi) %>.%
+  sdrop_na(., wrist) %>.%
+  correlation(., method = "kendall") ->
+  bio_corr
+
+plot(bio_corr, type = "upper")
+```
+
+-   La corrélation entre l'indice de masse corporelle et le tour de poignet est de 0,36 selon l'indice de corrélation de Pearson.
+-   La corrélation est plus importante pour le tour de poignet et la masse ou la taille.
+
+```{r summarise, record='RODFS', object='bio_summ', warning=FALSE}
+# Regroupement par genre
+# puis calcul de la moyenne, de l'écart-type et du nombre d'individus
+bio2 %>.%
+  sgroup_by(., gender) %>.%
+  ssummarise(.,
+    bmi_mean = fmean(bmi),
+    bmi_sd   = fsd(bmi),
+    n        = fn(bim)) ->
+  bio_summ
+
+bio_summ <- labelise(bio_summ,
+  label = list(bmi_mean = "Moyenne d'IMC", bmi_sd = "Écart type d'IMC",
+    n = "Nombre d'individus"))
+
+# table bien formatée
+tabularise(bio_summ) 
+```
+
+-   Le nombre d'individus est similaire entre les deux groupes étudiés.
+-   Les moyennes d'IMC sont similaires pour les deux groupes.
+
+```{r chart, record='RNCS'}
+# graphique de l'IMC en fonction du tour de poignet
+chart(data = bio2, bmi ~ wrist) 
+  geom_point()
+```
+
+-   La forme du nuage de points n'est pas linéaire.
+-   Un individu a un tour de poignet particulièrement faible.
+-   Un individu a un IMC particulièrement élevé.
+
+### Modélisation de l'IMC en fonction du tour de poignet
+
+```{r reset2}
+# L'instruction suivante est commentée. Si vous n'avez pas réussi à déboguer 
+# les chunks précédent, vous pouvez décommenter cette instruction pour obtenir
+# le bon tableau de données nommé bio2
+#bio2 <- read("data/bio2.rds")
+```
+
+```{r lm, record='ROP', object='bmi_lm', arg='call'}
+# Régression linéaire : IMC en fonction du tour du poignet
+bmi_lm <- lm(data = bio2 bmi ~ wrist)
+# Graphique du modèle
+chart(bmi_lm)
+```
+
+-   De nombreux points ne sont pas compris dans l'enveloppe de confiance à 95 % du modèle.
+-   L'IMC augmente avec une augmentation du tour de poignet.
+-   
+
+```{r lmsummary, record='RNP', arg='col_keys', warning=FALSE}
+# Nouveauté : résumé du modèle mieux présenté grâce à tabularise()
+tabularise(summary(bmi_lm))
+```
+
+-   Les deux paramètres du modèle sont significativement différents de 0 au seuil alpha de 5 %.
+
+-   
+
+### Analyse des résidus
+
+<!--# Indice : utilisez la page d'aide ?chart.lm pour vous guider-->
+
+```{r resid1, record='RNCS'}
+# Résidus en fonction des valeurs prédites
+chart$(bmi_lm)
+```
+
+-   La répartition des points n'est pas homogène tout au long de l'abscisse. Il y a peu de valeurs faibles ou de valeurs élevées.
+
+-   L'étendue des résidus est élevée par rapport à l'étendue des valeurs prédites.
+
+-   Plusieurs valeurs extrêmes sont observées.
+
+```{r resid2, record='RNCS'}
+# Normalité des résidus
+chart$(bim_lm)
+```
+
+-   Les résidus s'écartent fortement de la Normale aux extrémités de manière symétrique, mais c'est explicable par la présence de valeurs extrêmes.
+
+-   
+
+```{r resid3, record='RNCS'}
+# Homoscédasticité des résidus
+chart$(bmi_lm)
+```
+
+-   L'étalement des résidus montre une forte hétéroscédasticité qui augmente au centre, probablement liée à la non linéarité.
+
+```{r resid4, record='RNCS'}
+# Influence des individus sur la régression linéaire
+chart$(bmi_lm)
+```
+
+-   Plusieurs observations ont des distances de cook importante.
+
+-   Un fort effet de levier n'est pas observé.
+
+## Discussion et conclusion
+
+-   Ce modèle n'est pas optimale est requière une révision complète.

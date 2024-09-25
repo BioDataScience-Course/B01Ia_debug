@@ -10,6 +10,9 @@ original :
 	echo "Configuration du dépôt avec les fichiers d'origine..."
 	echo "  • Remplacement des fichiers de travail par les originaux..."
 	Rscript -e "source('tools_tests.R'); res <- prepare_files(type = 'original')"
+	echo "  • Élimination des versions compilées des documents Quarto..."
+	rm -f ../bmi_notebook.html
+	rm -rf ../bmi_notebook_files
 	echo "  • Effacement des objets créés pour les tests..."
 	rm -rf results
 	echo "✔︎ Documents originaux installés."
@@ -22,6 +25,9 @@ solution :
 	Rscript -e "source('tools_tests.R'); res <- decrypt_solutions(error = FALSE)"
 	echo "  • Remplacement des fichiers de travail par les solutions..."
 	Rscript -e "source('tools_tests.R'); res <- prepare_files(type = 'solution')"
+	echo "  • Élimination des version compilées des documents Quarto..."
+	rm -f ../bmi_notebook.html
+	rm -rf ../bmi_notebook_files
 	echo "  • Effacement des objets créés pour les tests..."
 	rm -rf results
 	echo "✔︎ Solution installée. Réexécutez les scripts et les rendus Quarto."
@@ -34,6 +40,9 @@ prepare :
 	Rscript -e "source('tools_tests.R'); res <- prepare_files(type = 'original', remove_last_saved = TRUE)"
 	echo "  • Cryptage des fichiers de solution..."
 	Rscript -e "source('tools_tests.R'); res <- encrypt_solutions()"
+	echo "  • Élimination des versions compilées des documents Quarto..."
+	rm -f ../bmi_notebook.html
+	rm -rf ../bmi_notebook_files
 	echo "  • Effacement des objets créés pour les tests..."
 	rm -rf results
 	echo "✔︎ Préparation terminée !"
