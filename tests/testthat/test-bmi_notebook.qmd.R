@@ -87,7 +87,7 @@ test_that("Chunk 'import' : importation des données", {
 
 test_that("Chunk 'mutate' : calcul de nouvelles variables", {
   expect_true(is_identical_to_ref("mutate", "names"))
-  # Les colonnes dans le tableau `bio1` importé ne sont pas celles attendues.
+  # Les colonnes dans le tableau `bio1` ne sont pas celles attendues.
   # Vérifiez le calcul des variables `bmi` et `bfp` pour corriger le problème.
 
   expect_true(is_identical_to_ref("mutate", "classes"))
@@ -138,16 +138,15 @@ test_that("Chunk 'summarise' : tableau résumé", {
   # Vérifiez tout particulièrement l'instruction lié au groupe dans vos données
   # (sgroup_by()) pour corriger le problème.
 
-  expect_true(is_identical_to_ref("import", "units"))
-  # Les unités renseignées pour les variables de `bmi_summ` sont incorrectes.
+  expect_true(is_identical_to_ref("summarise", "units"))
+  # Les unités renseignées pour les variables de `bio_summ` sont incorrectes.
   # Vérifiez la labélisation des variables pour corriger le problème.
 
   expect_true(is_identical_to_ref("summarise", "nas"))
-  # Les valeurs manquantes pour les variables de `bio2` sont incorrectes
+  # Les valeurs manquantes pour les variables de `bio_summ` sont incorrectes
   # Vérifiez le calcul réalisé sur les groupes (ssummarise()) pour corriger le
   #  problème.
 })
-
 
 test_that("Chunk 'chart' : Graphique de l'IMC en fonction du tour de poignet",  {
   expect_true(is_identical_to_ref("chart"))
@@ -162,14 +161,13 @@ test_that("Chunk 'lm' : Modélisation", {
   # L'avez-vous généré après avoir relu les données `bio2` ?
 })
 
-
 test_that("Chunks 'resid1', 'resid2', 'resid3', 'resid4' : Analyse des résidus", {
   expect_true(is_identical_to_ref("resid1"))
   # Le graphique ne correspond pas à la distribution des résidus en
   # fonction des valeurs prédites
   # Inspirez-vous de la page d'aide à ?chart.lm et du cours en ligne.
 
-  expect_true(is_identical_to_ref("resid2"))
+  expect_true(is_identical_to_ref("resid2", "labels"))
   # Le graphique n'est pas celui qui permet de vérifier la Normalité des
   # résidus
   # Inspirez-vous de la page d'aide à ?chart.lm et du cours en ligne.

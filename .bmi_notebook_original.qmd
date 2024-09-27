@@ -29,7 +29,7 @@ SciViews::R("model" lang = "fr")
 
 ## Introduction et but
 
-L'excès de graisse, principalement abdominale, est associé à une augmentation des risques de maladies cardiovasculaires et de diabète. Plusieurs indices ont été définis ces dernières années afin de catégoriser les individus à risque. Le plus connu est l'indice de masse corporelle, mais on peut également citer l'indice de masse grasse et le ratio tour de taille/tour de hanche [@lebacq2015].
+L'excès de graisse, principalement abdominale, est associé à une augmentation des risques de maladies cardiovasculaires et de diabète. Plusieurs indices ont été définis ces dernières années pour catégoriser les individus à risque. Le plus connu est l'indice de masse corporelle, mais on peut également citer l'indice de masse grasse et le ratio tour de taille/tour de hanche [@lebacq2015].
 
 ## Matériel et méthodes
 
@@ -59,7 +59,7 @@ L'analyse est réalisée avec la SciViews Box 2024 dans [Saturn Cloud](https://s
 biometry <- read("biometry", package = BioDataScience)
 ```
 
-L'indice de masse corporelle (@eq-bmi) ou encore l'indice de masse grasse (@eq-bfi) sont deux indices employés afin de mettre en évidence les personnes à risque. Ces deux indices ont l'avantage d'être très simples à obtenir. La masse, la taille, l'âge ou encore le sexe sont des variables que l'on peut facilement recueillir lors de questionnaires avec des patients.
+L'indice de masse corporelle (@eq-bmi) ou encore l'indice de masse grasse (@eq-bfi) sont deux indices employés pour mettre en évidence les personnes à risque. Ces deux indices ont l'avantage d'être très simples à obtenir. La masse, la taille, l'âge ou encore le sexe sont des variables que l'on peut facilement recueillir lors de questionnaires avec des patients.
 
 ```{r mutate, record='RODFS', object='bio1'}
 # Calcul de l'IMC (bmi, body mass index)
@@ -80,7 +80,7 @@ bio1 <- smutate(biometry,
 
 ```{r reduce, record='RODFS', object='bio2'}
 # Élimination des colonnes day_birth et year_measure
-# On garde age égal ou supérieur à 18 et age strictement inférieur à 26
+# On garde âge égal ou supérieur à 18 et âge strictement inférieur à 26
 bio1 %>.%
   sfilter(., -day_birth, -year_measure) %>.%
   sselect(., age > 18 & age <= 26) ->
@@ -175,7 +175,7 @@ tabularise(summary(bmi_lm))
 
 <!--# Indice : utilisez la page d'aide ?chart.lm pour vous guider-->
 
-```{r resid1, record='RNCS'}
+```{r resid1, record='RNCS', arg='no.data'}
 # Résidus en fonction des valeurs prédites
 chart$(bmi_lm)
 ```
@@ -186,31 +186,31 @@ chart$(bmi_lm)
 
 -   Plusieurs valeurs extrêmes sont observées.
 
-```{r resid2, record='RNCS'}
+```{r resid2, record='RNCS', arg='no.data'}
 # Normalité des résidus
 chart$(bim_lm)
 ```
 
--   Les résidus s'écartent fortement de la Normale aux extrémités de manière symétrique, mais c'est explicable par la présence de valeurs extrêmes.
+-   Les résidus s'écartent fortement de la normale aux extrémités de manière symétrique, mais c'est explicable par la présence de valeurs extrêmes.
 
 -   
 
-```{r resid3, record='RNCS'}
+```{r resid3, record='RNCS', arg='no.data'}
 # Homoscédasticité des résidus
 chart$(bmi_lm)
 ```
 
 -   L'étalement des résidus montre une forte hétéroscédasticité qui augmente au centre, probablement liée à la non linéarité.
 
-```{r resid4, record='RNCS'}
+```{r resid4, record='RNCS', arg='no.data'}
 # Influence des individus sur la régression linéaire
 chart$(bmi_lm)
 ```
 
--   Plusieurs observations ont des distances de cook importante.
+-   Plusieurs observations ont des distances de Cook importante.
 
 -   Un fort effet de levier n'est pas observé.
 
 ## Discussion et conclusion
 
--   Ce modèle n'est pas optimale est requière une révision complète.
+Le modèle présenté ici n'est pas optimal. Il nécessite des adaptations pour être utilisable.
