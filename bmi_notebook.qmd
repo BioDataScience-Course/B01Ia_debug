@@ -160,7 +160,6 @@ chart(bmi_lm)
 
 -   De nombreux points ne sont pas compris dans l'enveloppe de confiance à 95 % du modèle.
 -   L'IMC augmente avec une augmentation du tour de poignet.
--   
 
 ```{r lmsummary, record='RNP', arg='col_keys', warning=FALSE}
 # Nouveauté : résumé du modèle mieux présenté grâce à tabularise()
@@ -168,8 +167,6 @@ tabularise(summary(bmi_lm))
 ```
 
 -   Les deux paramètres du modèle sont significativement différents de 0 au seuil alpha de 5 %.
-
--   
 
 ### Analyse des résidus
 
@@ -193,8 +190,6 @@ chart$(bim_lm)
 
 -   Les résidus s'écartent fortement de la normale aux extrémités de manière symétrique, mais c'est explicable par la présence de valeurs extrêmes.
 
--   
-
 ```{r resid3, record='RNCS', arg='no.data'}
 # Homoscédasticité des résidus
 chart$(bmi_lm)
@@ -203,7 +198,7 @@ chart$(bmi_lm)
 -   L'étalement des résidus montre une forte hétéroscédasticité qui augmente au centre, probablement liée à la non linéarité.
 
 ```{r resid4, record='RNCS', arg='no.data'}
-# Influence des individus sur la régression linéaire
+# Influence des individus sur la régression linéaire : effet de levier des résidus
 chart$(bmi_lm)
 ```
 
