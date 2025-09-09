@@ -17,9 +17,12 @@ bibliography: references.bib
 <!--% Remplacez author: "___" par votre nom. Votre nom n'est pas votre login Github. ex: author: "John Doe". Attention, l'entête YAML est très sensible aux espaces, aux guillemets et à l'"indentation" (= le nombre d'espaces blancs au début de chaque ligne). Par précaution, mettez toujours le texte derrière title:, author:, date:, … entre guillemets doubles et respectez l'indentation initiale. -->
 
 ```{r setup, include=FALSE}
-# This is needed to the SDD test suite, do not use in a "real" project
+# Ceci est nécessaire pour les tests SDD, ne pas utiliser dans un "vrai" projet
 if (!"tools:tests" %in% search())
   source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
+
+# Configure Knitr to use AGG as graphic device
+knitr::opts_chunk$set(dev = "ragg_png")
 
 # Configure SciViews::R environment
 SciViews::R("model" lang = "fr")
@@ -51,7 +54,7 @@ La variable concernant le sexe vaut 1 pour les hommes et 0 pour les femmes. Selo
 
 Les données sont rendues publiques sous licence MIT dans le package {BioDataScience}. Les métadonnées (dont une description de chaque variable du jeu de données) sont disponibles dans la page d'aide du jeu de données `?biometry`.
 
-L'analyse est réalisée avec la SciViews Box 2024 dans [Saturn Cloud](https://saturncloud.io) (Linux) avec le [logiciel R](https://www.r-project.org) (`r R.version.string`).
+L'analyse est réalisée avec le logiciel R (`r R.version.string`) et en particulier le package  {modelit} version `r packageVersion("modelit")` dans la [SciViews Box 2025](https://www.sciviews.org/software/svbox/). [Saturn Cloud](https://saturncloud.io/) (Linux Ubuntu 22.04). Le seuil $\alpha$ de tous les tests est fixé à l'avance à 5%.
 
 ## Résultats
 
@@ -108,7 +111,7 @@ plot(bio_corr, type = "upper")
 ```
 
 -   La corrélation entre l'indice de masse corporelle et le tour de poignet est de 0,36 selon l'indice de corrélation de Pearson.
--   La corrélation est plus importante pour le tour de poignet et la masse ou la taille.
+-   La corrélation est plus importante pour le tour de poignet et la masse qu'avec la taille.
 
 ```{r summarise, record='RODFS', object='bio_summ', warning=FALSE}
 # Regroupement par genre
@@ -132,7 +135,7 @@ tabularise(bio_summ)
 -   Le nombre d'individus est similaire entre les deux groupes étudiés.
 -   Les moyennes d'IMC sont similaires pour les deux groupes.
 
-```{r chart, record='RNCS'}
+```{r chart, record='RNCS', arg='no.data'}
 # graphique de l'IMC en fonction du tour de poignet
 chart(data = bio2, bmi ~ wrist) 
   geom_point()
@@ -161,9 +164,10 @@ chart(bmi_lm)
 -   De nombreux points ne sont pas compris dans l'enveloppe de confiance à 95 % du modèle.
 -   L'IMC augmente avec une augmentation du tour de poignet.
 
+<!--# Nouveautés : 1) La fonction summary_() du package {modelit} propose le même résultat que  summary() en gardant l'object employé en tant qu'attribut ce qui permet une meilleure gestion des labels. 2) Résumé du modèle mieux présenté grâce à tabularise(). -->
+
 ```{r lmsummary, record='RNP', arg='col_keys', warning=FALSE}
-# Nouveauté : résumé du modèle mieux présenté grâce à tabularise()
-tabularise(summary(bmi_lm))
+tabularise(summary_(bmi_lm))
 ```
 
 -   Les deux paramètres du modèle sont significativement différents de 0 au seuil alpha de 5 %.
