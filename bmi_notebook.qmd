@@ -187,6 +187,8 @@ chart$(bmi_lm)
 
 -   Plusieurs valeurs extrêmes sont observées.
 
+    <!-- TODO: test normalité des résidus ne réussit pas car aspect pseudo-aleatoire -->
+
 ```{r resid2, record='RNCS', arg='no.data'}
 # Normalité des résidus
 chart$(bim_lm)
