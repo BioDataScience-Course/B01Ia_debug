@@ -1,7 +1,7 @@
 # Vérification de bmi_notebook.qmd
+bmi <- try(parsermd::parse_qmd("../../bmi_notebook.qmd"))
+expect_true(TRUE, info = bmi)
 
-bmi <- parse_rmd("../../bmi_notebook.qmd",
-  allow_incomplete = TRUE, parse_yaml = TRUE)
 
 test_that("Le bloc-notes est-il compilé en un fichier final HTML ?", {
   expect_true(is_rendered("bmi_notebook.qmd"))
@@ -54,20 +54,21 @@ test_that("La structure du document est-elle conservée ?", {
 })
 
 test_that("L'entête YAML a-t-il été complété ?", {
-  expect_true(bmi[[1]]$author != "___")
-  expect_true(!grepl("__", bmi[[1]]$author))
-  expect_true(grepl("^[^_]....+", bmi[[1]]$author))
+  authors <- bmi[[1]]@yaml[["author"]]
+  expect_true(authors != "___")
+  expect_true(!grepl("__", authors))
+  expect_true(grepl("^[^_]....+", authors))
   # Le nom d'auteur n'est pas complété ou de manière incorrecte dans l'entête
   # Vous devez indiquer votre nom dans l'entête YAML à la place de "___" et
   # éliminer les caractères '_' par la même occasion.
 
-  expect_true(grepl("[a-z]", bmi[[1]]$author))
+  expect_true(grepl("[a-z]", authors))
   # Aucune lettre minuscule n'est trouvée dans le nom d'auteur
   # Avez-vous bien complété le champ 'author' dans l'entête YAML ?
   # Vous ne pouvez pas écrire votre nom tout en majuscules. Utilisez une
   # majuscule en début de nom et de prénom, et des minuscules ensuite.
 
-  expect_true(grepl("[A-Z]", bmi[[1]]$author))
+  expect_true(grepl("[A-Z]", authors))
   # Aucune lettre majuscule n'est trouvée dans le nom d'auteur
   # Avez-vous bien complété le champ 'author' dans l'entête YAML ?
   # Vous ne pouvez pas écrire votre nom tout en minuscules. Utilisez une
