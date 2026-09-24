@@ -10,6 +10,7 @@ format:
 editor: visual
 lang: fr
 svbox: 2026
+vm: "Ubuntu 24.04.3 LTS"
 bibliography: references.bib
 ---
 
@@ -55,7 +56,7 @@ La variable concernant le sexe vaut 1 pour les hommes et 0 pour les femmes. Selo
 
 Les données sont rendues publiques sous licence MIT dans le package {BioDataScience}. Les métadonnées (dont une description de chaque variable du jeu de données) sont disponibles dans la page d'aide du jeu de données `?biometry`.
 
-L'analyse est réalisée avec le logiciel R (`r R.version.string`) et en particulier le package {modelit} version `r packageVersion("modelit")` avec la [SciViews Box `r rmarkdown::metadata$svbox`](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io/) (Linux Ubuntu 22.04). Le seuil $\alpha$ de tous les tests est fixé à l'avance à 5%.
+L'analyse est réalisée avec le logiciel R (`r R.version.string`) et en particulier le package {modelit} version `r packageVersion("modelit")` avec la [SciViews Box `r rmarkdown::metadata$svbox`](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io/) (`r rmarkdown::metadata$vm`). Le seuil $\alpha$ de tous les tests est fixé à l'avance à 5%.
 
 ## Résultats
 
