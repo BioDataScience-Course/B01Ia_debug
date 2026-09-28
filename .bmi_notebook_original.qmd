@@ -169,13 +169,11 @@ tabularise(summary_(bmi_lm))
 
 - Les deux paramètres du modèle sont significativement différents de 0 au seuil alpha de 5 %.
 
-### Analyse des résidus
-
-<!--# Indice : utilisez la page d'aide ?chart.lm pour vous guider-->
+<!--# Les différents graphiques ci-dessous sont dédiés à l'analyse des résidus. Nous les étudierons en détail dans les prochains modules de ce cours. Nous avons déjà abordé certains graphiques dans le module 10 du cours de SDDI. Vous pouvez néanmoins lire la page d'aide ?chart.lm. -->
 
 ```{r resid1, record='RNCS', arg='no.data'}
 # Résidus en fonction des valeurs prédites
-chart$(bmi_lm)
+chart$resfitted(bmi_lm)
 ```
 
 - La répartition des points n'est pas homogène tout au long de l'abscisse. Il y a peu de valeurs faibles ou de valeurs élevées.
@@ -186,21 +184,21 @@ chart$(bmi_lm)
 
 ```{r resid2, record='RNCS', arg='no.data'}
 # Normalité des résidus
-chart$(bmi_lm)
+chart$qqplot(bmi_lm)
 ```
 
 - Les résidus s'écartent fortement de la normale aux extrémités de manière symétrique, mais c'est explicable par la présence de valeurs extrêmes.
 
 ```{r resid3, record='RNCS', arg='no.data'}
 # Homoscédasticité des résidus
-chart$(bmi_lm)
+chart$scalelocation(bmi_lm)
 ```
 
 - L'étalement des résidus montre une forte hétéroscédasticité qui augmente au centre, probablement liée à la non linéarité.
 
 ```{r resid4, record='RNCS', arg='no.data'}
 # Influence des individus sur la régression linéaire : effet de levier des résidus
-chart$(bmi_lm)
+chart$resleverage(bmi_lm)
 ```
 
 - Plusieurs observations ont des distances de Cook importante.
